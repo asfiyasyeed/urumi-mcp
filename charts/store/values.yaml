@@ -1,0 +1,25 @@
+host: store.localtest.me
+scheme: http
+publicPort: ""            # empty = no port in the URL (production)
+secretName: store-secrets
+
+storage:
+  className: ""           # empty = cluster default
+  mariadbSize: 2Gi
+  wordpressSize: 2Gi
+
+images:
+  mariadb: mariadb:11.4
+  wordpress: wordpress:6-apache
+
+ingress:
+  className: ""
+  annotations: {}
+
+resources:
+  mariadb:
+    requests: {cpu: 100m, memory: 256Mi}
+    limits: {cpu: 500m, memory: 512Mi}
+  wordpress:
+    requests: {cpu: 100m, memory: 256Mi}
+    limits: {cpu: "1", memory: 1Gi}

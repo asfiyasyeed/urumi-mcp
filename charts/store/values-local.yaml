@@ -1,0 +1,3 @@
+host: store.localtest.me
+scheme: http
+publicPort: "8080"
