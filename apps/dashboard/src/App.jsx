@@ -4,6 +4,7 @@ import Servers from "./Servers";
 import Members from "./Members";
 import MyKey from "./MyKey";
 import Audit from "./Audit";
+import Chat from "./Chat";
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -45,6 +46,7 @@ export default function App() {
   const tabs = [
     ...(admin ? [["servers", "Servers"], ["members", "Members"]] : []),
     ["mykey", "My API key"],
+    ["chat", "Chat"],
     ["audit", "Audit log"],
   ];
   return (
@@ -60,6 +62,7 @@ export default function App() {
       {page === "servers" && admin && <Servers />}
       {page === "members" && admin && <Members />}
       {page === "mykey" && <MyKey />}
+      {page === "chat" && <Chat />}
       {page === "audit" && <Audit />}
     </div>
   );

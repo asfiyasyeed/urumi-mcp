@@ -1,3 +1,4 @@
+import { runChat } from "./chat.js";
 import express from "express";
 import crypto from "node:crypto";
 import { db, hashPassword, verifyPassword, sha256 } from "./db.js";
@@ -189,4 +190,15 @@ apiRouter.get("/audit", auth, (req, res) => {
     `SELECT id, ts, user_email, source, server_slug, tool, duration_ms, outcome, error
      FROM audit_log WHERE (? = 1 OR user_id = ?) ORDER BY id DESC LIMIT ?`
   ).all(admin ? 1 : 0, req.user.id, limit));
+});
+
+// ---------- chat agent (any logged-in user; acts as that user) ----------
+apiRouter.post("/chat", auth, async (req, res) => {
+  const messages = Array.isArray(req.body?.messages) ? req.body.messages : [];
+  if (!messages.length) return res.status(400).json({ error: "messages are required" });
+  try {
+    res.json(await runChat(req.user, messages));
+  } catch (e) {
+    res.status(502).json({ error: e.message });
+  }
 });
