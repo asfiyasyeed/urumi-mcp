@@ -1,4 +1,5 @@
 import { db } from "./db.js";
+import { decryptServer } from "./crypto.js";
 import { listUpstreamTools, callUpstreamTool } from "./upstream.js";
 
 // slug -> { state, tools, error, checkedAt }
@@ -6,7 +7,7 @@ export const status = new Map();
 const TTL_MS = 10000;
 
 export const enabledServers = () =>
-  db.prepare("SELECT * FROM servers WHERE enabled = 1 ORDER BY id").all();
+  db.prepare("SELECT * FROM servers WHERE enabled = 1 ORDER BY id").all().map(decryptServer);
 
 export async function refreshServer(s) {
   try {
