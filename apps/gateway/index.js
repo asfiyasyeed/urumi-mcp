@@ -1,3 +1,4 @@
+import { apiRouter } from "./api.js";
 import express from "express";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
@@ -28,6 +29,7 @@ function buildServer(user) {
 
 const app = express();
 app.use(express.json());
+app.use("/api", apiRouter);
 app.get("/healthz", (req, res) => res.json({ ok: true }));
 
 app.post("/mcp", async (req, res) => {
