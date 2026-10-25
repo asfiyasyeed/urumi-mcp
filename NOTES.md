@@ -410,3 +410,12 @@ URLs: storefront `http://store.localtest.me:8080`, dashboard and MCP `http://mcp
 - Lost a GitHub token because it is shown only once. Save secrets in a private place.
 - Forgot that environment variables disappear in a new terminal window.
 - Pasting only part of a multi-step guide skipped files (for example, the API router wasn't plugged in). Check with `grep`.
+
+---
+
+## 20. UI polish and the dashboard upgrade (added last)
+
+- I replaced the plain styling with one stylesheet (`src/index.css`): slate neutrals, one blue accent, 1px borders, status pills for connected/unreachable/disabled and success/error, and chat bubbles with tool-call chips. No logic changed, only classes and CSS.
+- The "My API key" page now has a "Connect an MCP client" panel with Copy buttons for the URL and header, and the Claude Code example in a collapsed section. The full key is still shown once.
+- Deploy: built `mcp-dashboard:0.1.1`, imported it into k3d, bumped `tag` in the dashboard chart values, ran `helm upgrade`. The `dashboard` release is now at revision 2, so `helm rollback dashboard 1 -n mcp` would bring back the old UI. The README build line was updated to 0.1.1 too.
+- Domain: I kept `localtest.me` on purpose. A real domain needs a real server and DNS. In production only the `host` values change.
