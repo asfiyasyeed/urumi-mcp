@@ -1,0 +1,4 @@
+image:
+  repository: registry.example.com/yourname/mcp-extra
+  tag: "0.1.0"
+  pullPolicy: Always

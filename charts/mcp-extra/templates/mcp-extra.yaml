@@ -1,0 +1,72 @@
+{{- range .Values.servers }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-{{ .name }}
+spec:
+  type: ClusterIP
+  selector:
+    app: mcp-{{ .name }}
+  ports:
+  - port: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-{{ .name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-{{ .name }}
+  template:
+    metadata:
+      labels:
+        app: mcp-{{ .name }}
+    spec:
+      containers:
+      - name: mcp-{{ .name }}
+        image: {{ $.Values.image.repository }}:{{ $.Values.image.tag }}
+        imagePullPolicy: {{ $.Values.image.pullPolicy }}
+        ports:
+        - containerPort: 3000
+        env:
+        - name: SERVER_KIND
+          value: {{ .kind | quote }}
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        resources:
+          {{- toYaml $.Values.resources | nindent 10 }}
+---
+{{- end }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mcp-extra-allow-gateway-only
+spec:
+  podSelector:
+    matchExpressions:
+    - key: app
+      operator: In
+      values:
+      {{- range .Values.servers }}
+      - mcp-{{ .name }}
+      {{- end }}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: {{ .Values.gatewayPodLabel }}
+    ports:
+    - port: 3000

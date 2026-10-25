@@ -1,0 +1,16 @@
+image:
+  repository: mcp-extra
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+gatewayPodLabel: gateway
+
+servers:
+  - name: notes
+    kind: notes
+  - name: utils
+    kind: utils
+
+resources:
+  requests: {cpu: 25m, memory: 48Mi}
+  limits: {cpu: 200m, memory: 128Mi}
