@@ -18,13 +18,14 @@ function Login({ onLogin }) {
     } catch (e) { setError(e.message); }
   }
   return (
-    <div style={{ maxWidth: 320, margin: "80px auto", fontFamily: "sans-serif" }}>
+    <div className="login">
       <h2>MCP Gateway</h2>
-      <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: "100%", marginBottom: 8 }} />
-      <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && submit()} style={{ width: "100%", marginBottom: 8 }} />
-      <button onClick={submit}>Log in</button>
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
+      <p className="hint">Sign in to manage servers and use your tools.</p>
+      <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <input placeholder="Password" type="password" value={password}
+        onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} />
+      <button className="primary" onClick={submit}>Log in</button>
+      {error && <p className="error">{error}</p>}
     </div>
   );
 }
@@ -39,7 +40,7 @@ export default function App() {
     api("/me").then(setUser).catch(() => sessionStorage.clear()).finally(() => setReady(true));
   }, []);
 
-  if (!ready) return <p style={{ padding: 24 }}>Loading...</p>;
+  if (!ready) return <p className="shell hint">Loading...</p>;
   if (!user) return <Login onLogin={(u) => { setUser(u); setPage(u.role === "admin" ? "servers" : "mykey"); }} />;
 
   const admin = user.role === "admin";
@@ -50,20 +51,24 @@ export default function App() {
     ["audit", "Audit log"],
   ];
   return (
-    <div style={{ fontFamily: "sans-serif", padding: 24 }}>
-      <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 16 }}>
-        <b>MCP Gateway</b>
-        {tabs.map(([id, label]) => (
-          <button key={id} onClick={() => setPage(id)} style={{ fontWeight: page === id ? "bold" : "normal" }}>{label}</button>
-        ))}
-        <span style={{ marginLeft: "auto" }}>{user.email} ({user.role})</span>
-        <button onClick={async () => { await api("/logout", { method: "POST" }).catch(() => {}); sessionStorage.clear(); setUser(null); }}>Log out</button>
+    <>
+      <div className="topbar">
+        <div className="topbar-inner">
+          <span className="brand">MCP Gateway</span>
+          {tabs.map(([id, label]) => (
+            <button key={id} className={"tab" + (page === id ? " active" : "")} onClick={() => setPage(id)}>{label}</button>
+          ))}
+          <span className="who">{user.email} ({user.role})</span>
+          <button onClick={async () => { await api("/logout", { method: "POST" }).catch(() => {}); sessionStorage.clear(); setUser(null); }}>Log out</button>
+        </div>
       </div>
-      {page === "servers" && admin && <Servers />}
-      {page === "members" && admin && <Members />}
-      {page === "mykey" && <MyKey />}
-      {page === "chat" && <Chat />}
-      {page === "audit" && <Audit />}
-    </div>
+      <div className="shell">
+        {page === "servers" && admin && <Servers />}
+        {page === "members" && admin && <Members />}
+        {page === "mykey" && <MyKey />}
+        {page === "chat" && <Chat />}
+        {page === "audit" && <Audit />}
+      </div>
+    </>
   );
 }

@@ -22,27 +22,29 @@ export default function Chat() {
   }
 
   return (
-    <div style={{ maxWidth: 760 }}>
+    <div className="chat">
       <h3>Chat agent</h3>
-      <p style={{ color: "gray" }}>Try: "What tools do you have?", "Create a product called Test Cap priced 99", "What orders came in today?"</p>
-      <div style={{ border: "1px solid #ccc", padding: 12, minHeight: 240, marginBottom: 8 }}>
+      <p className="hint">Try: "What tools do you have?", "Create a product called Test Cap priced 99", "What orders came in today?"</p>
+      <div className="chatbox">
+        {messages.length === 0 && <span className="hint">No messages yet.</span>}
         {messages.map((m, i) => (
-          <div key={i} style={{ marginBottom: 12 }}>
-            <b>{m.role === "user" ? "You" : "Agent"}:</b> <span style={{ whiteSpace: "pre-wrap" }}>{m.text}</span>
+          <div key={i} className={"msg " + m.role}>
+            {m.text}
             {m.toolCalls?.length > 0 && (
-              <div style={{ fontSize: 12, color: "#555", marginTop: 4 }}>
-                Tools called: {m.toolCalls.map((t, j) => (
-                  <code key={j} style={{ marginRight: 6, color: t.ok ? "green" : "crimson" }}>{t.name}({JSON.stringify(t.args)})</code>
+              <div className="chips">
+                {m.toolCalls.map((t, j) => (
+                  <span key={j} className={"chip" + (t.ok ? "" : " bad")}>{t.name}({JSON.stringify(t.args)})</span>
                 ))}
               </div>
             )}
           </div>
         ))}
-        {busy && <p style={{ color: "gray" }}>Thinking...</p>}
+        {busy && <span className="hint">Thinking...</span>}
       </div>
-      <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
-        placeholder="Ask something..." style={{ width: "80%" }} />
-      <button onClick={send} disabled={busy}>Send</button>
+      <div className="composer">
+        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Ask something..." />
+        <button className="primary" onClick={send} disabled={busy}>Send</button>
+      </div>
     </div>
   );
 }

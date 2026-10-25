@@ -36,7 +36,7 @@ export default function Servers() {
   return (
     <div>
       <h3>MCP servers</h3>
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
       {loading && <p>Loading...</p>}
       <table border="1" cellPadding="6" style={{ borderCollapse: "collapse", width: "100%" }}>
         <thead><tr><th>Name</th><th>Slug</th><th>URL</th><th>Status</th><th>Credential</th><th>Tools</th><th>Actions</th></tr></thead>
@@ -46,13 +46,13 @@ export default function Servers() {
               <td>{s.name}</td>
               <td>{s.slug}</td>
               <td>{s.url}</td>
-              <td style={{ color: colors[s.state] }} title={s.error || ""}>{s.state}</td>
+              <td title={s.error || ""}><span className={"badge " + s.state}>{s.state}</span></td>
               <td>{s.has_credential ? "set (hidden)" : "none"}</td>
               <td>{s.tools.map((t) => t.name).join(", ")}</td>
               <td>
                 <button onClick={() => toggle(s)}>{s.enabled ? "Disable" : "Enable"}</button>{" "}
                 <button onClick={() => editCred(s)}>Credential</button>{" "}
-                <button onClick={() => remove(s)}>Remove</button>
+                <button className="danger" onClick={() => remove(s)}>Remove</button>
               </td>
             </tr>
           ))}
@@ -66,7 +66,7 @@ export default function Servers() {
           value={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.value })}
           style={{ display: "block", width: 380, marginBottom: 6 }} />
       ))}
-      <button onClick={add}>Add server</button>
+      <button className="primary" onClick={add}>Add server</button>
     </div>
   );
 }

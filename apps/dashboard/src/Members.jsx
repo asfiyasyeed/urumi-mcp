@@ -31,15 +31,15 @@ export default function Members() {
   return (
     <div>
       <h3>Members</h3>
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
-      {newKey && <p style={{ background: "#ffd", padding: 8 }}><b>Copy now, shown once:</b> <code>{newKey}</code></p>}
+      {error && <p className="error">{error}</p>}
+      {newKey && <p className="keybox"><b>Copy now, shown once:</b> <code>{newKey}</code></p>}
       <table border="1" cellPadding="6" style={{ borderCollapse: "collapse", width: "100%" }}>
         <thead><tr><th>Email</th><th>Role</th><th>Active keys</th><th>Actions</th></tr></thead>
         <tbody>
           {users.map((u) => (
             <tr key={u.id}>
               <td>{u.email}</td><td>{u.role}</td><td>{u.active_keys}</td>
-              <td><button onClick={() => issueKey(u)}>Issue key</button>{" "}<button onClick={() => remove(u)}>Remove</button></td>
+              <td><button onClick={() => issueKey(u)}>Issue key</button>{" "}<button className="danger" onClick={() => remove(u)}>Remove</button></td>
             </tr>
           ))}
         </tbody>
@@ -65,7 +65,7 @@ export default function Members() {
       <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} style={{ marginBottom: 6 }}>
         <option>member</option><option>admin</option>
       </select><br />
-      <button onClick={add}>Add member</button>
+      <button className="primary" onClick={add}>Add member</button>
     </div>
   );
 }
