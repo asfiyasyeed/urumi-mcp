@@ -1,0 +1,8 @@
+image:
+  repository: registry.example.com/yourname/mcp-gateway
+  tag: "0.1.0"
+  pullPolicy: Always
+storage:
+  className: local-path          # k3s default; change for a cloud provider
+  size: 5Gi
+upstreamTimeoutMs: "30000"

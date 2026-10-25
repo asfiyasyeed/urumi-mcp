@@ -1,0 +1,17 @@
+image:
+  repository: mcp-gateway
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+secretName: gateway-secrets     # keys: credential-key, gemini-api-key
+
+upstreamTimeoutMs: "20000"
+geminiModel: gemini-3.5-flash-lite
+
+storage:
+  className: ""                 # empty = cluster default
+  size: 1Gi
+
+resources:
+  requests: {cpu: 100m, memory: 128Mi}
+  limits: {cpu: 500m, memory: 384Mi}
