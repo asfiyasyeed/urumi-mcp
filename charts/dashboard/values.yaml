@@ -1,0 +1,16 @@
+image:
+  repository: mcp-dashboard
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+ingress:
+  host: mcp.example.com
+  className: ""
+  annotations: {}
+  tls:
+    enabled: false
+    secretName: dashboard-tls
+
+resources:
+  requests: {cpu: 25m, memory: 32Mi}
+  limits: {cpu: 200m, memory: 96Mi}
