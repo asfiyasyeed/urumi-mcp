@@ -38,8 +38,8 @@ Needs Docker, kubectl, helm and k3d.
    docker build -t mcp-woo:0.1.0 apps/mcp-woo
    docker build -t mcp-extra:0.1.0 apps/mcp-extra
    docker build -t mcp-gateway:0.1.0 apps/gateway
-   docker build -t mcp-dashboard:0.1.0 apps/dashboard
-   for i in mcp-woo mcp-extra mcp-gateway mcp-dashboard; do k3d image import $i:0.1.0 -c mcp; done
+   docker build -t mcp-dashboard:0.1.1 apps/dashboard
+   for i in mcp-woo:0.1.0 mcp-extra:0.1.0 mcp-gateway:0.1.0 mcp-dashboard:0.1.1; do k3d image import $i -c mcp; done
    ```
 5. Install the charts:
    ```
