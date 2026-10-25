@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-woo
+spec:
+  type: ClusterIP
+  selector:
+    app: mcp-woo
+  ports:
+  - port: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-woo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-woo
+  template:
+    metadata:
+      labels:
+        app: mcp-woo
+    spec:
+      containers:
+      - name: mcp-woo
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 3000
+        env:
+        - name: WOO_BASE_URL
+          value: {{ .Values.woo.baseUrl | quote }}
+        - name: WOO_HOST_HEADER
+          value: {{ .Values.woo.hostHeader | quote }}
+        - name: WOO_CONSUMER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.woo.secretName }}
+              key: consumer-key
+        - name: WOO_CONSUMER_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.woo.secretName }}
+              key: consumer-secret
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mcp-woo-allow-gateway-only
+spec:
+  podSelector:
+    matchLabels:
+      app: mcp-woo
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: {{ .Values.gatewayPodLabel }}
+    ports:
+    - port: 3000

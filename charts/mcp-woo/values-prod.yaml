@@ -1,0 +1,6 @@
+image:
+  repository: registry.example.com/yourname/mcp-woo   # pushed to a real registry
+  tag: "0.1.0"
+  pullPolicy: Always
+woo:
+  hostHeader: store.yourdomain.com

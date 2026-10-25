@@ -1,0 +1,16 @@
+image:
+  repository: mcp-woo
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+# How the server reaches the store inside the cluster
+woo:
+  baseUrl: http://wordpress.store.svc.cluster.local
+  hostHeader: store.example.com
+  secretName: woo-api-keys      # Secret with keys: consumer-key, consumer-secret
+
+gatewayPodLabel: gateway        # only pods with app=<this> may connect
+
+resources:
+  requests: {cpu: 50m, memory: 64Mi}
+  limits: {cpu: 250m, memory: 128Mi}
