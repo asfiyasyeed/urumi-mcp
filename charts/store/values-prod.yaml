@@ -1,0 +1,16 @@
+# Production-like VPS (k3s). Replace the domain with yours.
+host: store.yourdomain.com
+scheme: https
+publicPort: ""
+storage:
+  className: local-path        # k3s default; use your provider's class elsewhere
+  mariadbSize: 10Gi
+  wordpressSize: 10Gi
+ingress:
+  className: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+resources:
+  wordpress:
+    requests: {cpu: 250m, memory: 512Mi}
+    limits: {cpu: "2", memory: 2Gi}
